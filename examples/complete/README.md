@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Scaffolding Example
+# Access Leaf Switch Profile Example
 
 To run this example you need to execute:
 
@@ -12,12 +12,20 @@ $ terraform apply
 Note that this example will create resources. Resources can be destroyed with `terraform destroy`.
 
 ```hcl
-module "aci_scaffolding" {
-  source = "netascode/scaffolding/aci"
+module "aci_access_leaf_switch_profile" {
+  source = "netascode/access-leaf-switch-profile/aci"
 
-  name        = "ABC"
-  alias       = "ABC-ALIAS"
-  description = "My Description"
+  name               = "LEAF101"
+  interface_profiles = ["PROF1"]
+  selectors = [{
+    name   = "SEL1"
+    policy = "POL1"
+    node_blocks = [{
+      name = "BLOCK1"
+      from = 101
+      to   = 101
+    }]
+  }]
 }
 
 ```
