@@ -57,14 +57,14 @@ variable "selectors" {
 
   validation {
     condition = alltrue(flatten([
-      for s in var.selectors : [for nb in s.node_blocks : (nb.from >= 1 || nb.from <= 4000)]
+      for s in var.selectors : [for nb in s.node_blocks : (nb.from >= 1 && nb.from <= 4000)]
     ]))
     error_message = "Minimum value: 1, Maximum value: 4000."
   }
 
   validation {
     condition = alltrue(flatten([
-      for s in var.selectors : [for nb in s.node_blocks : (nb.to == null || nb.to >= 1 || nb.to <= 4000)]
+      for s in var.selectors : [for nb in s.node_blocks : (nb.to == null || (nb.to >= 1 && nb.to <= 4000))]
     ]))
     error_message = "Minimum value: 1, Maximum value: 4000."
   }
