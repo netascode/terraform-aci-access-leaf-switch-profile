@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Leaf switch profile name"
+  description = "Leaf switch profile name."
   type        = string
 
   validation {
@@ -9,7 +9,7 @@ variable "name" {
 }
 
 variable "interface_profiles" {
-  description = "List of interface profile names"
+  description = "List of interface profile names."
   type        = list(string)
   default     = []
 
@@ -22,7 +22,7 @@ variable "interface_profiles" {
 }
 
 variable "selectors" {
-  description = "List of selectors, Allowed values `from`: 1-4000, Allowed values `to`: 1-4000."
+  description = "List of selectors. Allowed values `from`: 1-4000. Allowed values `to`: 1-4000."
   type = list(object({
     name   = string
     policy = optional(string)
@@ -38,34 +38,34 @@ variable "selectors" {
     condition = alltrue([
       for s in var.selectors : can(regex("^[a-zA-Z0-9_.-]{0,64}$", s.name))
     ])
-    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+    error_message = "`name`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
   }
 
   validation {
     condition = alltrue([
-      for s in var.selectors : can(regex("^[a-zA-Z0-9_.-]{0,64}$", s.policy))
+      for s in var.selectors : s.policy == null || can(regex("^[a-zA-Z0-9_.-]{0,64}$", s.policy))
     ])
-    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+    error_message = "`policy`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
   }
 
   validation {
     condition = alltrue(flatten([
-      for s in var.selectors : [for nb in s.node_blocks : can(regex("^[a-zA-Z0-9_.-]{0,64}$", nb.name))]
+      for s in var.selectors : [for nb in coalesce(s.node_blocks, []) : can(regex("^[a-zA-Z0-9_.-]{0,64}$", nb.name))]
     ]))
-    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+    error_message = "`node_blocks.name`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
   }
 
   validation {
     condition = alltrue(flatten([
-      for s in var.selectors : [for nb in s.node_blocks : (nb.from >= 1 && nb.from <= 4000)]
+      for s in var.selectors : [for nb in coalesce(s.node_blocks, []) : (nb.from >= 1 && nb.from <= 4000)]
     ]))
-    error_message = "Minimum value: 1, Maximum value: 4000."
+    error_message = "`from`: Minimum value: 1. Maximum value: 4000."
   }
 
   validation {
     condition = alltrue(flatten([
-      for s in var.selectors : [for nb in s.node_blocks : (nb.to == null || (nb.to >= 1 && nb.to <= 4000))]
+      for s in var.selectors : [for nb in coalesce(s.node_blocks, []) : (nb.to == null || try(nb.to >= 1 && nb.to <= 4000, false))]
     ]))
-    error_message = "Minimum value: 1, Maximum value: 4000."
+    error_message = "`to`: Minimum value: 1. Maximum value: 4000."
   }
 }
