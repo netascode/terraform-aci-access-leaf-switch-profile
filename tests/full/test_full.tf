@@ -59,11 +59,28 @@ resource "test_assertions" "infraLeafS" {
   }
 }
 
+data "aci_rest" "infraRsAccNodePGrp" {
+  dn = "${data.aci_rest.infraLeafS.id}/rsaccNodePGrp"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "infraRsAccNodePGrp" {
+  component = "infraRsAccNodePGrp"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest.infraRsAccNodePGrp.content.tDn
+    want        = "uni/infra/funcprof/accnodepgrp-POL1"
+  }
+}
+
 data "aci_rest" "infraNodeBlk" {
   dn = "${data.aci_rest.infraLeafS.id}/nodeblk-BLOCK1"
 
   depends_on = [module.main]
 }
+
 
 resource "test_assertions" "infraNodeBlk" {
   component = "infraNodeBlk"
