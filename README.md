@@ -12,13 +12,14 @@ Location in GUI:
 
 ```hcl
 module "aci_access_leaf_switch_profile" {
-  source = "netascode/access-leaf-switch-profile/aci"
+  source  = "netascode/access-leaf-switch-profile/aci"
+  version = ">= 0.0.2"
 
   name               = "LEAF101"
   interface_profiles = ["PROF1"]
   selectors = [{
-    name   = "SEL1"
-    policy = "POL1"
+    name         = "SEL1"
+    policy_group = "POL1"
     node_blocks = [{
       name = "BLOCK1"
       from = 101
@@ -48,7 +49,7 @@ module "aci_access_leaf_switch_profile" {
 |------|-------------|------|---------|:--------:|
 | <a name="input_name"></a> [name](#input\_name) | Leaf switch profile name. | `string` | n/a | yes |
 | <a name="input_interface_profiles"></a> [interface\_profiles](#input\_interface\_profiles) | List of interface profile names. | `list(string)` | `[]` | no |
-| <a name="input_selectors"></a> [selectors](#input\_selectors) | List of selectors. Allowed values `from`: 1-4000. Allowed values `to`: 1-4000. | <pre>list(object({<br>    name   = string<br>    policy = optional(string)<br>    node_blocks = list(object({<br>      name = string<br>      from = number<br>      to   = optional(number)<br>    }))<br>  }))</pre> | `[]` | no |
+| <a name="input_selectors"></a> [selectors](#input\_selectors) | List of selectors. Allowed values `from`: 1-4000. Allowed values `to`: 1-4000. | <pre>list(object({<br>    name         = string<br>    policy_group = optional(string)<br>    node_blocks = list(object({<br>      name = string<br>      from = number<br>      to   = optional(number)<br>    }))<br>  }))</pre> | `[]` | no |
 
 ## Outputs
 

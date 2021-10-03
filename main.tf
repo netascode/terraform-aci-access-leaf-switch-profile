@@ -33,11 +33,11 @@ resource "aci_rest" "infraLeafS" {
 }
 
 resource "aci_rest" "infraRsAccNodePGrp" {
-  for_each   = { for sel in var.selectors : sel.name => sel if lookup(sel, "policy", null) != null }
+  for_each   = { for sel in var.selectors : sel.name => sel if sel.policy_group != null }
   dn         = "${aci_rest.infraLeafS[each.value.name].id}/rsaccNodePGrp"
   class_name = "infraRsAccNodePGrp"
   content = {
-    tDn = "uni/infra/funcprof/accnodepgrp-${each.value.policy}"
+    tDn = "uni/infra/funcprof/accnodepgrp-${each.value.policy_group}"
   }
 }
 resource "aci_rest" "infraNodeBlk" {
