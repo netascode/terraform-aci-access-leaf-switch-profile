@@ -1,3 +1,7 @@
+## 0.0.3
+
+- Update implicit resource dependencies
+
 ## 0.0.2
 
 - BREAKING CHANGE: rename policy variable to policy_group
