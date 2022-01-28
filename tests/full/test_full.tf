@@ -5,8 +5,8 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
@@ -27,7 +27,7 @@ module "main" {
   }]
 }
 
-data "aci_rest" "infraNodeP" {
+data "aci_rest_managed" "infraNodeP" {
   dn = "uni/infra/nprof-${module.main.name}"
 
   depends_on = [module.main]
@@ -38,13 +38,13 @@ resource "test_assertions" "infraNodeP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraNodeP.content.name
+    got         = data.aci_rest_managed.infraNodeP.content.name
     want        = module.main.name
   }
 }
 
-data "aci_rest" "infraLeafS" {
-  dn = "${data.aci_rest.infraNodeP.id}/leaves-SEL1-typ-range"
+data "aci_rest_managed" "infraLeafS" {
+  dn = "${data.aci_rest_managed.infraNodeP.id}/leaves-SEL1-typ-range"
 
   depends_on = [module.main]
 }
@@ -54,13 +54,13 @@ resource "test_assertions" "infraLeafS" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraLeafS.content.name
+    got         = data.aci_rest_managed.infraLeafS.content.name
     want        = "SEL1"
   }
 }
 
-data "aci_rest" "infraRsAccNodePGrp" {
-  dn = "${data.aci_rest.infraLeafS.id}/rsaccNodePGrp"
+data "aci_rest_managed" "infraRsAccNodePGrp" {
+  dn = "${data.aci_rest_managed.infraLeafS.id}/rsaccNodePGrp"
 
   depends_on = [module.main]
 }
@@ -70,13 +70,13 @@ resource "test_assertions" "infraRsAccNodePGrp" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.infraRsAccNodePGrp.content.tDn
+    got         = data.aci_rest_managed.infraRsAccNodePGrp.content.tDn
     want        = "uni/infra/funcprof/accnodepgrp-POL1"
   }
 }
 
-data "aci_rest" "infraNodeBlk" {
-  dn = "${data.aci_rest.infraLeafS.id}/nodeblk-BLOCK1"
+data "aci_rest_managed" "infraNodeBlk" {
+  dn = "${data.aci_rest_managed.infraLeafS.id}/nodeblk-BLOCK1"
 
   depends_on = [module.main]
 }
@@ -87,25 +87,25 @@ resource "test_assertions" "infraNodeBlk" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.infraNodeBlk.content.name
+    got         = data.aci_rest_managed.infraNodeBlk.content.name
     want        = "BLOCK1"
   }
 
   equal "from_" {
     description = "from_"
-    got         = data.aci_rest.infraNodeBlk.content.from_
+    got         = data.aci_rest_managed.infraNodeBlk.content.from_
     want        = "101"
   }
 
   equal "to_" {
     description = "to_"
-    got         = data.aci_rest.infraNodeBlk.content.to_
+    got         = data.aci_rest_managed.infraNodeBlk.content.to_
     want        = "101"
   }
 }
 
-data "aci_rest" "infraRsAccPortP" {
-  dn = "${data.aci_rest.infraNodeP.id}/rsaccPortP-[uni/infra/accportprof-PROF1]"
+data "aci_rest_managed" "infraRsAccPortP" {
+  dn = "${data.aci_rest_managed.infraNodeP.id}/rsaccPortP-[uni/infra/accportprof-PROF1]"
 
   depends_on = [module.main]
 }
@@ -115,7 +115,7 @@ resource "test_assertions" "infraRsAccPortP" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.infraRsAccPortP.content.tDn
+    got         = data.aci_rest_managed.infraRsAccPortP.content.tDn
     want        = "uni/infra/accportprof-PROF1"
   }
 }
