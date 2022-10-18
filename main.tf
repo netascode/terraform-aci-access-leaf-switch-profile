@@ -40,6 +40,7 @@ resource "aci_rest_managed" "infraRsAccNodePGrp" {
     tDn = "uni/infra/funcprof/accnodepgrp-${each.value.policy_group}"
   }
 }
+
 resource "aci_rest_managed" "infraNodeBlk" {
   for_each   = { for item in local.node_blocks : item.key => item.value }
   dn         = "${aci_rest_managed.infraLeafS[each.value.selector].dn}/nodeblk-${each.value.name}"
